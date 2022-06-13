@@ -8,19 +8,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1e279f09-c752-488e-b92f-6dc1ba577295" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ERClothToDS3.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ERClothToDS3.sln" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DumpAllDs3ChrCloth.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DumpAllDs3PartsCloth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ds3TypeDump.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ds3TypeDump.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERClothToDS3.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ERClothToDS3.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERClothToDS3.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/ERClothToDS3.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Res/Ds3ClothClasses.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Res/Ds3ClothClasses.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -35,12 +43,13 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
   </component>
   <component name="RunManager">
     <configuration name="ERClothToDS3" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/Debug/net6.0/ERClothToDS3.exe" />
+      <option name="PROGRAM_PARAMETERS" value="&quot;D:\SteamLibrary\steamapps\common\DARK SOULS III\Game\Archthrones\parts\bd_m_8800-partsbnd-dcx\parts\FullBody\BD_M_8800\BD_M_8800_c2018_converted.xml&quot;" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bin/Debug/net6.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -50,7 +59,7 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
+      <option name="PROJECT_TFM" value="net6.0" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -64,7 +73,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1651171812202</updated>
-      <workItem from="1651171813860" duration="3839000" />
+      <workItem from="1651171813860" duration="4145000" />
+      <workItem from="1651337846699" duration="77248000" />
+      <workItem from="1652829502350" duration="5108000" />
+      <workItem from="1653514804711" duration="997000" />
+      <workItem from="1654536599937" duration="790000" />
     </task>
     <servers />
   </component>
