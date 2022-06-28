@@ -8,12 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1e279f09-c752-488e-b92f-6dc1ba577295" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DumpAllDs3ChrCloth.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DumpAllDs3PartsCloth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/projectSettingsUpdater.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ERClothToDS3/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ds3TypeDump.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ds3TypeDump.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ERClothToDS3.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ERClothToDS3.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ERClothToDS3.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/ERClothToDS3.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERClothToDS3.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ERClothToDS3.sln" beforeDir="false" afterPath="$PROJECT_DIR$/DS3HavokConverter.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Res/Ds3ClothClasses.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Res/Ds3ClothClasses.xml" afterDir="false" />
     </list>
@@ -39,12 +39,11 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false"
+  }
+}]]></component>
   <component name="RunManager">
     <configuration name="ERClothToDS3" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/bin/Debug/net6.0/ERClothToDS3.exe" />
@@ -78,6 +77,8 @@
       <workItem from="1652829502350" duration="5108000" />
       <workItem from="1653514804711" duration="997000" />
       <workItem from="1654536599937" duration="790000" />
+      <workItem from="1655219244370" duration="600000" />
+      <workItem from="1655509540021" duration="772000" />
     </task>
     <servers />
   </component>

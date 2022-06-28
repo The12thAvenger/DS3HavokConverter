@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERClothToDS3", "ERClothToDS3.csproj", "{63E6C514-08B8-4AD7-B02E-E18CE52D6F5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DS3HavokConverter", "DS3HavokConverter.csproj", "{63E6C514-08B8-4AD7-B02E-E18CE52D6F5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
