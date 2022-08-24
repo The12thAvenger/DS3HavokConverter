@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace DS3HavokConverter;
@@ -9,19 +10,24 @@ public static class Util
     {
         return xElement.Elements().FirstOrDefault(x => x.Attribute(attributeName)!.Value == attributeValue);
     }
-    
+
     public static string GetObjectTypeName(this XElement hkobject, XElement tagfile)
     {
+        if (hkobject.FirstNode is XComment typeComment)
+        {
+            return typeComment.Value.Replace("ArrayOf", "").Trim();
+        }
+
         if (hkobject.Attribute("typeid") is { } objTypeId)
         {
             return GetTypeName(objTypeId.Value, tagfile);
         }
-        
+
         if (hkobject.Parent?.Attribute("elementtypeid") is { } elementTypeId)
         {
             return GetTypeName(elementTypeId.Value, tagfile);
         }
-        
+
         if (hkobject.Ancestors("field").FirstOrDefault() is { } field)
         {
             return field.GetFieldTypeName(tagfile);
@@ -49,7 +55,8 @@ public static class Util
             // Rider is drunk
             foreach (string fieldName in fieldPath)
             {
-                string? typeId = objectType.Element("fields")?.GetElementByAttribute("name", fieldName)?.Attribute("typeid")!.Value;
+                string? typeId = objectType.Element("fields")?.GetElementByAttribute("name", fieldName)
+                    ?.Attribute("typeid")!.Value;
                 if (typeId is null) return string.Empty;
                 objectType = GetType(typeId, tagfile);
             }
@@ -62,7 +69,7 @@ public static class Util
     {
         return GetTypeName(array.Attribute("elementtypeid")!.Value, tagfile);
     }
-    
+
     private static string GetTypeName(string typeId, XElement tagfile)
     {
         return GetType(typeId, tagfile).Element("name")!.Attribute("value")!.Value;

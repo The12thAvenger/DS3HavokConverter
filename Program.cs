@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using DS3HavokConverter.Patches;
 
 namespace DS3HavokConverter;
 
@@ -13,7 +14,7 @@ public static class Program
 
     private static XElement _outputPackfile = null!;
 
-    private static ImmutableDictionary<string,string> _renamedFields = null!;
+    private static ImmutableDictionary<string, string> _renamedFields = null!;
 
     private static ImmutableDictionary<string, string> _removedFieldValues = null!;
 
@@ -31,7 +32,7 @@ public static class Program
             Console.ReadKey(true);
             return;
         }
-        
+
         _renamedFields = new Dictionary<string, string>
         {
             { "softContactSeperationVelocity", "softContactSeparationVelocity" }
@@ -42,13 +43,15 @@ public static class Program
             { "subSteps", "0" },
             { "isShared", "false" },
             { "batchSizeSpu", "512" },
-            { "padding", "0" }
+            { "padding", "0" },
+            { "reservedBodyId", "2147483647" },
+            { "spuFlags", "0" }
         }.ToImmutableDictionary();
 
         _inputTagfile = XElement.Load(args[0]);
         _outputPackfile = Create2014Packfile();
         ConvertAndAddObjects(_inputTagfile, _outputPackfile.Element("hksection")!);
-        
+
         File.Delete(args[0] + ".bak");
         File.Move(args[0], args[0] + ".bak");
 
@@ -64,7 +67,7 @@ public static class Program
 
     private static void ConvertAndAddObjects(in XElement inputTagfile, XElement outputDataSection)
     {
-        string[] ignoredClasses = {"hclStateDependencyGraph"};
+        string[] ignoredClasses = { "hclStateDependencyGraph", "hknpRefDragProperties" };
         foreach (XElement hkobject in inputTagfile.Elements("object"))
         {
             string className = hkobject.GetObjectTypeName(inputTagfile);
@@ -81,30 +84,37 @@ public static class Program
             }
             else
             {
-                Console.WriteLine($"No template found for class {className}.");
+                Console.WriteLine(
+                    $"Warning: No template found for class {className}. The object with id {hkobject.Attribute("id")?.Value} cannot be converted and will be skipped.");
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
             }
         }
     }
-    
+
     private static XElement GetObject(in XElement inputObject, in XElement template)
     {
         XElement outputObject = new(template);
         foreach (XElement outputField in outputObject.Elements())
         {
+            if (PatchManager.Patch(outputField, inputObject))
+            {
+                continue;
+            }
+
             XElement? inputFieldValue = GetInputField(outputField, inputObject);
             inputFieldValue ??= inputObject.Parent?.Name == "field"
                 ? GetInputField(outputField, inputObject.Parent!.Parent!)
                 : null;
-            
+
             if (inputFieldValue is null)
             {
                 if (!_removedFieldValues.TryGetValue(outputField.Attribute("name")!.Value, out string? outputValue))
                 {
-                    throw new Exception($"No input field found for field {outputField.Attribute("name")!.Value} in object of class {outputObject.Attribute("class")?.Value ?? "unknown"}");
+                    throw new Exception(
+                        $"No input field found for field {outputField.Attribute("name")!.Value} in object of class {outputObject.Attribute("class")?.Value ?? "unknown"}");
                 }
-                
+
                 outputField.Value = outputValue;
                 continue;
             }
@@ -137,32 +147,42 @@ public static class Program
         {
             _renamedFields.TryGetValue(xmlName, out alternateName);
         }
+
         string fieldName = alternateName ?? xmlName;
-            
+
         XElement? inputField = inputObject.GetElementByAttribute("name", fieldName);
         if (inputField is not null) return inputField.Elements().Single();
 
         string numSuffix = string.Concat(fieldName.Reverse().TakeWhile(char.IsNumber).Reverse());
         if (int.TryParse(numSuffix, out int fieldIndex))
         {
-            XElement? inputArray = inputObject.GetElementByAttribute("name", fieldName.Replace(numSuffix, ""))?.Elements().Single();
+            XElement? inputArray = inputObject.GetElementByAttribute("name", fieldName.Replace(numSuffix, ""))
+                ?.Element("array");
             if (inputArray is not null)
             {
                 if (inputArray.GetElementTypeName(_inputTagfile) == "hkPackedVector3")
                 {
-                    return inputArray.Elements().SelectMany(x => x.Element("field")!.Element("array")!.Elements()).ToList()[fieldIndex - 1];
+                    return inputArray.Elements().SelectMany(x => x.Element("field")!.Element("array")!.Elements())
+                        .ToList()[fieldIndex - 1];
                 }
-                
+
                 return inputArray.Elements().ToList()[fieldIndex - 1];
+            }
+
+            XElement? inputRecord = inputObject.GetElementByAttribute("name", fieldName.Replace(numSuffix, ""))
+                ?.Element("record");
+            if (inputRecord is not null && inputRecord.GetObjectTypeName(_inputTagfile) == "hkPackedVector3")
+            {
+                return inputRecord.Element("field")!.Element("array")!.Elements().ToList()[fieldIndex - 1];
             }
         }
 
         IEnumerable<XElement> unusedSubObjects = inputObject.Elements()
-           .Where(x => outputField.Parent!.Elements()
-                          .All(y => y.Attribute("name")!.Value != x.Attribute("name")!.Value) 
-                    && (x.Element("record") is not null
-                     || x.Element("array")?.GetElementTypeName(_inputTagfile) == "hclSimulateOperator::Config"))
-           .Select(x => x.Descendants("record").First());
+            .Where(x => outputField.Parent!.Elements()
+                            .All(y => y.Attribute("name")!.Value != x.Attribute("name")!.Value)
+                        && (x.Element("record") is not null
+                            || x.Element("array")?.GetElementTypeName(_inputTagfile) == "hclSimulateOperator::Config"))
+            .Select(x => x.Descendants("record").First());
 
         foreach (XElement subObject in unusedSubObjects)
         {
@@ -185,19 +205,27 @@ public static class Program
                 return inputFieldValue.Attribute("dec")!.Value.Replace("e", "E");
             case "integer":
                 string stringVal = inputFieldValue.Attribute("value")!.Value;
-                return int.TryParse(stringVal, out _) ? stringVal : unchecked((int) uint.Parse(stringVal)).ToString();
+                return int.TryParse(stringVal, out _) ? stringVal : unchecked((int)uint.Parse(stringVal)).ToString();
             case "record":
                 if (inputFieldValue.GetObjectTypeName(_inputTagfile) == "hkQsTransform")
                 {
                     return GetHkQsTransform(inputFieldValue);
                 }
-                
-                throw new ArgumentException($"Output template incomplete. Field {inputFieldValue.Parent!.Attribute("name")!.Value} in object of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)} does not contain expected subobject");
+
+                if (inputFieldValue.GetObjectTypeName(_inputTagfile) == "hknpBodyId")
+                {
+                    // ReSharper disable once TailRecursiveCall
+                    return GetValue(inputFieldValue.Element("field")!.Element("integer")!, false);
+                }
+
+                throw new ArgumentException(
+                    $"Output template incomplete. Field {inputFieldValue.Parent!.Attribute("name")!.Value} in object of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)} does not contain expected subobject");
             default:
                 if (inputFieldValue.HasElements ||
                     inputFieldValue.Attribute("value") == null)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(inputFieldValue), $"Unexpected field type encountered in field {inputFieldValue.Parent!.Attribute("name")!.Value} in object {inputFieldValue.Ancestors("object").First().Attribute("id")?.Value} of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)}");
+                    throw new ArgumentOutOfRangeException(nameof(inputFieldValue),
+                        $"Unexpected field type encountered in field {inputFieldValue.Parent!.Attribute("name")!.Value} in object {inputFieldValue.Ancestors("object").First().Attribute("id")?.Value} of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)}");
                 }
 
                 return inputFieldValue.Attribute("value")!.Value;
@@ -210,10 +238,11 @@ public static class Program
         {
             "record" => new List<XElement> { GetObject(inputFieldValue, template) },
             "array" => inputFieldValue.Elements().Select(element => GetObject(element, template)).ToList(),
-            _ => throw new ArgumentOutOfRangeException(nameof(inputFieldValue), $"Unexpected field type encountered in field {inputFieldValue.Parent!.Attribute("name")!.Value} in object {inputFieldValue.Ancestors("object").First().Attribute("id")?.Value} of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)}")
+            _ => throw new ArgumentOutOfRangeException(nameof(inputFieldValue),
+                $"Unexpected field type encountered in field {inputFieldValue.Parent!.Attribute("name")!.Value} in object {inputFieldValue.Ancestors("object").First().Attribute("id")?.Value} of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)}")
         };
     }
-    
+
     private static string GetArrayValue(in XElement array, bool isVector)
     {
         if (array.Attribute("count")!.Value == "0")
@@ -258,19 +287,26 @@ public static class Program
                 vectorValue += " ";
             }
         }
-        
+
         return vectorValue;
     }
 
     private static string GetHkQsTransform(in XElement record)
     {
-        return record.Elements().Aggregate(string.Empty, 
+        return record.Elements().Aggregate(string.Empty,
             (current, transformRow) => current + GetValue(transformRow.Element("array")!, true));
     }
 
     private static string ConvertPointer(string id)
     {
-        return id.Replace("object", "#");
+        int name = int.Parse(id.Replace("object", ""));
+        if (name == 0)
+        {
+            return "null";
+        }
+
+        name += 89;
+        return "#" + name;
     }
 
     private static XElement Create2014Packfile()
