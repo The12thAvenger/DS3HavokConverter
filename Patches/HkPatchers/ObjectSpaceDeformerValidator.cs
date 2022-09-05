@@ -10,18 +10,20 @@ public class ObjectSpaceDeformerValidator : IHkPatcher
 
     public bool Patch(XElement outputField, XElement inputObject)
     {
+        XElement objectSpaceDeformer =
+            inputObject.GetElementByAttribute("name", "objectSpaceDeformer")!.Element("record")!;
         bool hasEightBlend =
-            inputObject.GetElementByAttribute("name", "eightBlendEntries")!.Element("array")!.HasElements;
+            objectSpaceDeformer.GetElementByAttribute("name", "eightBlendEntries")!.Element("array")!.HasElements;
         bool hasSevenBlend =
-            inputObject.GetElementByAttribute("name", "sevenBlendEntries")!.Element("array")!.HasElements;
+            objectSpaceDeformer.GetElementByAttribute("name", "sevenBlendEntries")!.Element("array")!.HasElements;
         bool hasSixBlend =
-            inputObject.GetElementByAttribute("name", "sixBlendEntries")!.Element("array")!.HasElements;
+            objectSpaceDeformer.GetElementByAttribute("name", "sixBlendEntries")!.Element("array")!.HasElements;
         bool hasFiveBlend =
-            inputObject.GetElementByAttribute("name", "fiveBlendEntries")!.Element("array")!.HasElements;
+            objectSpaceDeformer.GetElementByAttribute("name", "fiveBlendEntries")!.Element("array")!.HasElements;
 
         if (!hasEightBlend && !hasSevenBlend && !hasSixBlend && !hasFiveBlend) return false;
 
-        XElement hclOperator = inputObject.Ancestors("object").Single();
+        XElement hclOperator = objectSpaceDeformer.Ancestors("object").Single();
 
         string className = hclOperator.Element("record")!.GetObjectTypeName(inputObject.Ancestors("tagfile").Single());
         string operatorName = hclOperator.Element("record")!.GetElementByAttribute("name", "name")!.Element("string")!

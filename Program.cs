@@ -219,7 +219,7 @@ public static class Program
                 }
 
                 throw new ArgumentException(
-                    $"Output template incomplete. Field {inputFieldValue.Parent!.Attribute("name")!.Value} in object of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)} does not contain expected subobject");
+                    $"Output template incomplete. Field {inputFieldValue.Ancestors("field").First().Attribute("name")!.Value} in object of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)} does not contain expected subobject");
             default:
                 if (inputFieldValue.HasElements ||
                     inputFieldValue.Attribute("value") == null)
