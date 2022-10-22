@@ -67,7 +67,8 @@ public static class Program
 
     private static void ConvertAndAddObjects(in XElement inputTagfile, XElement outputDataSection)
     {
-        string[] ignoredClasses = { "hclStateDependencyGraph", "hknpRefDragProperties" };
+        string[] ignoredClasses =
+            { "hclStateDependencyGraph", "hknpRefDragProperties", "hknpConvexPolytopeShape::Connectivity" };
         foreach (XElement hkobject in inputTagfile.Elements("object"))
         {
             string className = hkobject.GetObjectTypeName(inputTagfile);
@@ -220,6 +221,8 @@ public static class Program
 
                 throw new ArgumentException(
                     $"Output template incomplete. Field {inputFieldValue.Ancestors("field").First().Attribute("name")!.Value} in object of class {inputFieldValue.Ancestors("object").First().GetObjectTypeName(_inputTagfile)} does not contain expected subobject");
+            case "string":
+                return inputFieldValue.Attribute("value")?.Value ?? "";
             default:
                 if (inputFieldValue.HasElements ||
                     inputFieldValue.Attribute("value") == null)
