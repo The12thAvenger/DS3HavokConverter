@@ -11682,7 +11682,16 @@ false false false</hkparam>
             <hkparam name="aFromBTransform">(-6.104707717895508E-4 3.326514270156622E-4 4.171505570411682E-4 -0.02386474609375)(9.657815098762512E-7 -2.796296030282974E-7 -8.63792301970534E-5 0.9999994039535522)(1.0000001192092896 1.0000004768371582 1.0000004768371582 0.0)</hkparam>
           </hkobject>
         </hkparam>
-        <hkparam name="chainMappings" numelements="0"/>
+        <hkparam name="chainMappings" numelements="5">
+            <hkobject>
+              <hkparam name="startBoneA">27</hkparam>
+              <hkparam name="endBoneA">57</hkparam>
+              <hkparam name="startBoneB">3</hkparam>
+              <hkparam name="endBoneB">6</hkparam>
+              <hkparam name="startAFromBTransform">(0 -7.27596E-12 2.23517E-08 5.09979)(-1.07975E-07 -3.89264E-08 1.78857E-07 1)(1 1 1 0)</hkparam>
+              <hkparam name="endAFromBTransform">(-2.38419E-06 -4.76837E-07 1.49012E-08 2.83066)(1.57846E-08 6.38096E-10 -2.98023E-08 1)(1 1 1 0)</hkparam>
+            </hkobject>
+          </hkparam>
         <hkparam name="unmappedBones" numelements="0"/>
         <hkparam name="extractedMotionMapping">(0.0 0.0 0.0 0.0)(0.0 0.0 0.0 1.0)(1.0 1.0 1.0 1.0)</hkparam>
         <hkparam name="keepUnmappedLocal">true</hkparam>
